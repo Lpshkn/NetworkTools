@@ -4,10 +4,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_definitions(-DWPCAP)
 add_definitions(-DHAVE_REMOTE)
-add_executable(sniffer Sniffer/src/main.cpp)
+add_executable(sniffer Sniffer/src/main.cpp Sniffer/src/packets.cpp)
 
-include_directories(${CMAKE_SOURCE_DIR}/3dparty/WpdPack/Include)
-#link_directories(C:/Users/kofff/CLionProjects/NetworkTools/3dparty)
+include_directories(${CMAKE_SOURCE_DIR}/3dparty/WpdPack/Include ${CMAKE_SOURCE_DIR}/Sniffer/src)
 find_library(WS2 ws2_32)
 find_library(WPCAP wpcap)
 
