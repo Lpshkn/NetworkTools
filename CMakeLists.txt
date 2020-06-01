@@ -1,13 +1,13 @@
-cmake_minimum_required(VERSION 3.15)
-project(Sniffer)
-set(CMAKE_CXX_STANDARD 20)
+cmake_minimum_required(VERSION 3.16)
 
-add_definitions(-DWPCAP)
-add_definitions(-DHAVE_REMOTE)
-add_executable(sniffer Sniffer/src/main.cpp Sniffer/src/packets.cpp)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY arc)
+set(CMAKE_BINARY_DIR bin)
 
-include_directories(${CMAKE_SOURCE_DIR}/3dparty/WpdPack/Include ${CMAKE_SOURCE_DIR}/Sniffer/src)
-find_library(WS2 ws2_32)
-find_library(WPCAP wpcap)
+set(LIBTINS_BUILD_SHARED 0)
+set(LIBTINS_ENABLE_CXX11 1)
 
-target_link_libraries(sniffer ${WPCAP} ${WS2})
+include_directories(3dparty/libtins/include)
+add_subdirectory(3dparty/libtins)
+add_subdirectory(Sniffer)
