@@ -8,6 +8,7 @@ set(CMAKE_BINARY_DIR bin)
 set(LIBTINS_BUILD_SHARED 0)
 set(LIBTINS_ENABLE_CXX11 1)
 
-include_directories(3dparty/libtins/include)
+include_directories(3dparty/libtins/include 3dparty/argparse/include)
 add_subdirectory(3dparty/libtins)
+add_subdirectory(3dparty/argparse)
 add_subdirectory(Sniffer)

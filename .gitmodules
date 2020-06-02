@@ -1,3 +1,6 @@
 [submodule "3dparty/libtins"]
 	path = 3dparty/libtins
 	url = https://github.com/mfontanini/libtins
+[submodule "3dparty/argparse"]
+	path = 3dparty/argparse
+	url = https://github.com/p-ranav/argparse
