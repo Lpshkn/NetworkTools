@@ -36,7 +36,12 @@ std::string Configurator::getFilter() {
 }
 
 std::string Configurator::getInterface() {
-    return argumentParser_->get("interface");
+    try {
+        return argumentParser_->get("interface");
+    }
+    catch (const std::logic_error& err) {
+        return {};
+    }
 }
 
 void Configurator::parseArguments(int argc, char **argv) {
