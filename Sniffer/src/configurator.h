@@ -5,6 +5,7 @@
 #define NETWORKTOOLS_CONFIGURATOR_H
 
 #include <argparse/argparse.hpp>
+#include <tins/tins.h>
 
 class Configurator {
 public:
@@ -12,9 +13,10 @@ public:
     explicit Configurator(std::string  program_name, std::string  description = {},
                           std::string  epilog = {}, std::string  version = {}) noexcept;
 
-    Configurator* parseArguments(int argc, char* argv[]);
+    void parseArguments(int argc, char* argv[]);
     std::string getFilter();
     std::string getInterface();
+    std::unique_ptr<Tins::SnifferConfiguration> getSnifferConfig() noexcept;
 private:
     std::unique_ptr<argparse::ArgumentParser> argumentParser_;
     std::string programName_;

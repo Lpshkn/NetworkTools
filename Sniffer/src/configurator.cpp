@@ -8,7 +8,7 @@ Configurator::Configurator(std::string programName, std::string description,
         : programName_(std::move(programName)), description_(std::move(description)),
           epilog_(std::move(epilog)), version_(std::move(version)) {
 
-    argumentParser_ = buildParser();
+    argumentParser_ = std::move(buildParser());
 }
 
 std::unique_ptr<argparse::ArgumentParser> Configurator::buildParser() noexcept {
@@ -44,7 +44,7 @@ std::string Configurator::getInterface() {
     }
 }
 
-Configurator* Configurator::parseArguments(int argc, char **argv) {
+void Configurator::parseArguments(int argc, char **argv) {
     try {
         argumentParser_->parse_args(argc, argv);
     }
@@ -55,6 +55,13 @@ Configurator* Configurator::parseArguments(int argc, char **argv) {
         std::cerr << *argumentParser_ << std::endl;
         exit(-1);
     }
+}
 
-    return this;
+std::unique_ptr<Tins::SnifferConfiguration> Configurator::getSnifferConfig() noexcept {
+    auto config = std::make_unique<Tins::SnifferConfiguration>();
+    config->set_filter(this->getFilter());
+    config->set_promisc_mode(true);
+    config->set_immediate_mode(true);
+
+    return config;
 }
