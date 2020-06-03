@@ -12,7 +12,7 @@ public:
     explicit Configurator(std::string  program_name, std::string  description = {},
                           std::string  epilog = {}, std::string  version = {}) noexcept;
 
-    void parseArguments(int argc, char* argv[]);
+    Configurator* parseArguments(int argc, char* argv[]);
     std::string getFilter();
     std::string getInterface();
 private:

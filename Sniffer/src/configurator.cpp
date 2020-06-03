@@ -44,7 +44,7 @@ std::string Configurator::getInterface() {
     }
 }
 
-void Configurator::parseArguments(int argc, char **argv) {
+Configurator* Configurator::parseArguments(int argc, char **argv) {
     try {
         argumentParser_->parse_args(argc, argv);
     }
@@ -55,4 +55,6 @@ void Configurator::parseArguments(int argc, char **argv) {
         std::cerr << *argumentParser_ << std::endl;
         exit(-1);
     }
+
+    return this;
 }
