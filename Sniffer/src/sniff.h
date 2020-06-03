@@ -4,7 +4,9 @@
 #define NETWORKTOOLS_SNIFF_H
 
 #include <tins/tins.h>
+#include "configurator.h"
 
 void printPdu(Tins::PDU *pdu);
+std::unique_ptr<Tins::Sniffer> buildSniffer(Configurator &configurator);
 
 #endif //NETWORKTOOLS_SNIFF_H

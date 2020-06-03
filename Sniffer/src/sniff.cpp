@@ -14,14 +14,14 @@ void printPdu(Tins::PDU *pdu) {
         std::cout << "IP packet:" << std::endl
                   << "\t\tsrc: " << ip->src_addr() << std::endl
                   << "\t\tdst: " << ip->dst_addr() << std::endl
-                  << "\t\tttl: " << (int) ip->ttl() << std::endl
+                  << "\t\tttl: " << (int)ip->ttl() << std::endl
                   << "\t\tsize: " << ip->size() << std::endl;
     }
 
     if (auto icmp = pdu->find_pdu<Tins::ICMP>()) {
         std::cout << "ICMP packet:" << std::endl
                   << "\t\ttype: " << icmp->type() << std::endl
-                  << "\t\tcode: " << icmp->code() << std::endl
+                  << "\t\tcode: " << (int)icmp->code() << std::endl
                   << "\t\tsize: " << icmp->size() << std::endl;
     }
 
@@ -42,4 +42,22 @@ void printPdu(Tins::PDU *pdu) {
     }
 
     std::cout << std::right << std::setw(50) << std::setfill('-') << '\n';
+}
+
+std::unique_ptr<Tins::Sniffer> buildSniffer(Configurator &configurator) {
+    auto config = std::move(configurator.getSnifferConfig());
+    std::unique_ptr<Tins::Sniffer> sniffer;
+    try {
+        sniffer = std::make_unique<Tins::Sniffer>(configurator.getInterface(), *config);
+    }
+    catch (const Tins::invalid_pcap_filter &err) {
+        std::cerr << "Error: this pcap filter is incorrect" << std::endl;
+        exit(-2);
+    }
+    catch (const Tins::pcap_error &err) {
+        std::cerr << "Error: this interface doesn't exist" << std::endl;
+        exit(-3);
+    }
+
+    return std::move(sniffer);
 }
