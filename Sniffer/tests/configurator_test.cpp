@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
-#include "configurator.h"
+#include "sniffer_configurator.h"
 
 class ConfiguratorTest : public ::testing::Test {
 protected:
-    Configurator *configurator{};
+    SnifferConfigurator *configurator{};
 
     void SetUp() override {
-        configurator = new Configurator("Test");
+        configurator = new SnifferConfigurator("Test");
     }
 
     void TearDown() override {
