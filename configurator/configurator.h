@@ -17,7 +17,6 @@ public:
 
     virtual void parseArguments(int argc, char* argv[]);
     virtual std::string getFilter();
-    virtual std::string getInterface();
     virtual std::unique_ptr<Tins::SnifferConfiguration> getSnifferConfig() noexcept;
 
 protected:

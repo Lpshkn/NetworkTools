@@ -7,6 +7,6 @@
 #include "sniffer_configurator.h"
 
 void printPdu(Tins::PDU *pdu);
-std::unique_ptr<Tins::Sniffer> buildSniffer(Configurator &configurator);
+std::unique_ptr<Tins::Sniffer> buildSniffer(SnifferConfigurator &configurator);
 
 #endif //NETWORKTOOLS_SNIFF_H

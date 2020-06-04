@@ -44,7 +44,7 @@ void printPdu(Tins::PDU *pdu) {
     std::cout << std::right << std::setw(50) << std::setfill('-') << '\n';
 }
 
-std::unique_ptr<Tins::Sniffer> buildSniffer(Configurator &configurator) {
+std::unique_ptr<Tins::Sniffer> buildSniffer(SnifferConfigurator &configurator) {
     auto config = std::move(configurator.getSnifferConfig());
     std::unique_ptr<Tins::Sniffer> sniffer;
     try {

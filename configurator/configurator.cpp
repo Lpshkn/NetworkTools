@@ -37,12 +37,3 @@ std::string Configurator::getFilter() {
         return {};
     }
 }
-
-std::string Configurator::getInterface() {
-    try {
-        return argumentParser_->get("interface");
-    }
-    catch (const std::logic_error& err) {
-        return {};
-    }
-}

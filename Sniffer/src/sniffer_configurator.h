@@ -12,6 +12,8 @@ public:
     explicit SnifferConfigurator(const std::string& program_name, const std::string& description = {},
             const std::string& epilog = {}, const std::string& version = {}) noexcept;
 
+    virtual std::string getInterface();
+
 private:
     std::unique_ptr<argparse::ArgumentParser> buildParser() override;
     void initialize();

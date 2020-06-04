@@ -29,3 +29,12 @@ SnifferConfigurator::SnifferConfigurator(const std::string& programName, const s
 void SnifferConfigurator::initialize() {
     argumentParser_ = std::move(buildParser());
 }
+
+std::string SnifferConfigurator::getInterface() {
+    try {
+        return argumentParser_->get("interface");
+    }
+    catch (const std::logic_error& err) {
+        return {};
+    }
+}
