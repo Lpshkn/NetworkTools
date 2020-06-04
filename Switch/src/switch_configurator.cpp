@@ -69,3 +69,7 @@ void SwitchConfigurator::parseArguments(int argc, char **argv) {
         exit(-2);
     }
 }
+
+int SwitchConfigurator::getLifeTime() noexcept {
+    return argumentParser_->get<int>("-t");
+}

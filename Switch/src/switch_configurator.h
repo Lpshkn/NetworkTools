@@ -11,6 +11,7 @@ public:
     explicit SwitchConfigurator(const std::string& program_name, const std::string& description = {},
                                  const std::string& epilog = {}, const std::string& version = {}) noexcept;
 
+    int getLifeTime() noexcept;
     std::unique_ptr<std::vector<std::string>> getInterfaces();
     void parseArguments(int argc, char** argv) override;
 
