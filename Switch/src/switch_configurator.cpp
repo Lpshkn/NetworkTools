@@ -33,9 +33,13 @@ void SwitchConfigurator::initialize() {
 }
 
 std::unique_ptr<std::vector<std::string>> SwitchConfigurator::getInterfaces() {
-    auto it = argumentParser_->get<std::vector<std::string>>("interfaces");
-
-    return std::make_unique<std::vector<std::string>>(it);
+    try {
+        auto it = argumentParser_->get<std::vector<std::string>>("interfaces");
+        return std::make_unique<std::vector<std::string>>(it);
+    }
+    catch (const std::logic_error& err) {
+        return nullptr;
+    }
 }
 
 void SwitchConfigurator::parseArguments(int argc, char **argv) {
@@ -43,7 +47,7 @@ void SwitchConfigurator::parseArguments(int argc, char **argv) {
         argumentParser_->parse_args(argc, argv);
         auto ifaces = argumentParser_->get<std::vector<std::string>>("interfaces");
         if (ifaces.size() < 2) {
-            throw std::runtime_error("There are less than 2 interfaces were passed");
+            throw std::logic_error("There are less than 2 interfaces were passed");
         }
     }
     catch (const std::runtime_error& err) {
@@ -54,8 +58,14 @@ void SwitchConfigurator::parseArguments(int argc, char **argv) {
         exit(-1);
     }
     catch (const std::logic_error& err) {
-        std::cerr << "Error: No interfaces were passed" << std::endl;
+        std::string error = err.what();
+        if (error == "stoi")
+            error = "Incorrect parameter '-t' was input";
+        else
+            error = std::regex_replace(error, std::regex {"^[\\s:]+"}, "");
+
+        std::cerr << "Error: " << error << std::endl;
         std::cerr << argumentParser_->help().str() << std::endl;
-        exit(-5);
+        exit(-2);
     }
 }
