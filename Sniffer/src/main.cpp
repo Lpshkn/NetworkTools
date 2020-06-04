@@ -1,5 +1,5 @@
 #include <iostream>
-#include "configurator.h"
+#include "sniffer_configurator.h"
 #include "sniff.h"
 
 
@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
     auto epilog = "Lpshkn, 2020";
     auto version = "0.1.0";
 
-    auto configurator = Configurator(programName, description,
+    auto configurator = SnifferConfigurator(programName, description,
                                      epilog, version);
     configurator.parseArguments(argc, argv);
     auto sniffer = buildSniffer(configurator);
