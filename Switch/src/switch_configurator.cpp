@@ -32,13 +32,21 @@ void SwitchConfigurator::initialize() {
     argumentParser_ = std::move(buildParser());
 }
 
-std::unique_ptr<std::vector<std::string>> SwitchConfigurator::getInterfaces() {
+std::unique_ptr<std::vector<Tins::NetworkInterface>> SwitchConfigurator::getInterfaces() {
     try {
-        auto it = argumentParser_->get<std::vector<std::string>>("interfaces");
-        return std::make_unique<std::vector<std::string>>(it);
+        auto interfaces = argumentParser_->get<std::vector<std::string>>("interfaces");
+        auto interfaces_ = std::make_unique<std::vector<Tins::NetworkInterface>>();
+        for (auto &iface : interfaces)
+            interfaces_->push_back(Tins::NetworkInterface(iface));
+
+        return std::move(interfaces_);
     }
     catch (const std::logic_error& err) {
         return nullptr;
+    }
+    catch (const Tins::invalid_interface& err) {
+        std::cerr << "Error: This interface doesn't exist" << std::endl;
+        exit(-10);
     }
 }
 

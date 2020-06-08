@@ -12,7 +12,7 @@ public:
                                  const std::string& epilog = {}, const std::string& version = {}) noexcept;
 
     int getLifeTime() noexcept;
-    std::unique_ptr<std::vector<std::string>> getInterfaces();
+    std::unique_ptr<std::vector<Tins::NetworkInterface>> getInterfaces();
     void parseArguments(int argc, char** argv) override;
 
 private:
