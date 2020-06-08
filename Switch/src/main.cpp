@@ -1,4 +1,5 @@
 #include "switch_configurator.h"
+#include "Switch.h"
 
 int main(int argc, char** argv) {
     auto programName = "Switch";
@@ -9,6 +10,8 @@ int main(int argc, char** argv) {
     auto configurator = SwitchConfigurator(programName, description,
                                             epilog, version);
     configurator.parseArguments(argc, argv);
+    auto switch_ = Switch(configurator);
+    switch_.run();
 
     return 0;
 }
