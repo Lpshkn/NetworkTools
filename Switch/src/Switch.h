@@ -15,13 +15,15 @@ public:
     explicit Switch(SwitchConfigurator& configurator);
     explicit Switch(std::vector<Tins::NetworkInterface>& interfaces);
     explicit Switch(std::vector<Tins::NetworkInterface>& interfaces, int lifeTime = 60);
-
-    void run();
+    static void run();
 
 private:
     int lifeTime_;
-    std::vector<Tins::NetworkInterface> interfaces_;
-    std::map<Tins::HWAddress<6>, Tins::NetworkInterface> commutationTable_;
+    static std::vector<Tins::NetworkInterface> interfaces_;
+    static std::map<Tins::HWAddress<6>, Tins::NetworkInterface> commutationTable_;
+
+    static void sniffLoop(Tins::NetworkInterface&);
+    static void queryTable(Tins::Packet&, Tins::NetworkInterface&);
 };
 
 #endif //NETWORKTOOLS_SWITCH_H

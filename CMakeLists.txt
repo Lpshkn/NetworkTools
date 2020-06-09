@@ -8,6 +8,8 @@ set(CMAKE_BINARY_DIR bin)
 set(LIBTINS_BUILD_SHARED 0)
 set(LIBTINS_ENABLE_CXX11 1)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+
 include_directories(3dparty/libtins/include 3dparty/argparse/include configurator)
 add_subdirectory(3dparty/libtins)
 add_subdirectory(3dparty/argparse)
