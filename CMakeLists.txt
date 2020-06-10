@@ -10,7 +10,8 @@ set(LIBTINS_ENABLE_CXX11 1)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
-include_directories(3dparty/libtins/include 3dparty/argparse/include configurator)
+include_directories(3dparty/libtins/include 3dparty/argparse/include 3dparty/libconfig/lib 3dparty/libconfig configurator)
+add_subdirectory(3dparty/libconfig)
 add_subdirectory(3dparty/libtins)
 add_subdirectory(3dparty/argparse)
 add_subdirectory(configurator)
