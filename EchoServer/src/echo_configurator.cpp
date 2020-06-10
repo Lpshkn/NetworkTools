@@ -44,15 +44,44 @@ uint16_t EchoConfigurator::getClientPort() {
 }
 
 Tins::IPv4Address EchoConfigurator::getServerAddress() {
-    return argumentParser_->get<Tins::IPv4Address>("-a");
+    try {
+        return argumentParser_->get<Tins::IPv4Address>("-a");
+    }
+    catch (const std::logic_error& err) {
+        return {};
+    }
 }
 
 uint16_t EchoConfigurator::getPort(const std::string& argument) {
-    auto port = argumentParser_->get<int>(argument);
-    if (port <= 0 || port > 65535) {
-        std::cerr << "Error: port is incorrect" << std::endl;
-        std::cerr << *argumentParser_ << std::endl;
-        exit(-1);
+    try {
+        auto port = argumentParser_->get<int>(argument);
+        if (port <= 0 || port > 65535) {
+            std::cerr << "Error: port is incorrect" << std::endl;
+            std::cerr << *argumentParser_ << std::endl;
+            exit(-1);
+        }
+        return port;
     }
-    return port;
+    catch (const std::logic_error& err) {
+        return {};
+    }
 }
+
+std::filesystem::path EchoConfigurator::getConfigFile() {
+    try {
+        auto filename = argumentParser_->get<std::string>("-f");
+        auto path = std::filesystem::path(filename);
+
+        if (!std::filesystem::exists(path)) {
+            std::cerr << "Error: This file doesn't exist" << std::endl;
+            std::cerr << *argumentParser_ << std::endl;
+            exit(-15);
+        }
+
+        return path;
+    }
+    catch (const std::logic_error& err) {
+        return {};
+    }
+}
+
