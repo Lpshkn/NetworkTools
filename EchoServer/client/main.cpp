@@ -1,4 +1,5 @@
 #include "echo_configurator.h"
+#include "Client.h"
 
 int main(int argc, char* argv[]) {
     auto programName = "EchoClient";
@@ -9,9 +10,13 @@ int main(int argc, char* argv[]) {
     EchoConfigurator configurator(programName, description, epilog, version);
     configurator.parseArguments(argc, argv);
 
-    auto it = configurator.getServerPort();
-    auto it2 = configurator.getClientPort();
-    auto it3 = configurator.getServerAddress();
+    Client client(configurator);
+
+    std::string message, response;
+    std::cout << "Enter your message: ";
+    std::cin >> message;
+    response = client.sendMessage(message);
+    std::cout << "Response of the server: " << response;
 
     return 0;
 }
