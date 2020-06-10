@@ -1,9 +1,15 @@
 #include <fstream>
+#include <libconfig.h++>
 #include "echo_configurator.h"
 
 EchoConfigurator::EchoConfigurator(const std::string &program_name, const std::string &description,
                                    const std::string &epilog, const std::string &version) noexcept
                                    : Configurator(program_name, description, epilog, version) {
+    serverPort_ = 0;
+    clientPort_ = 0;
+    serverAddress_ = {};
+    configFile_ = "";
+
     initialize();
 }
 
@@ -35,21 +41,16 @@ void EchoConfigurator::initialize() {
     argumentParser_ = std::move(buildParser());
 }
 
-uint16_t EchoConfigurator::getServerPort() {
-    return getPort("-s");
+uint16_t EchoConfigurator::getServerPort() const {
+    return serverPort_;
 }
 
-uint16_t EchoConfigurator::getClientPort() {
-    return getPort("-c");
+uint16_t EchoConfigurator::getClientPort() const {
+    return clientPort_;
 }
 
 Tins::IPv4Address EchoConfigurator::getServerAddress() {
-    try {
-        return argumentParser_->get<Tins::IPv4Address>("-a");
-    }
-    catch (const std::logic_error& err) {
-        return {};
-    }
+    return serverAddress_;
 }
 
 uint16_t EchoConfigurator::getPort(const std::string& argument) {
@@ -82,6 +83,50 @@ std::filesystem::path EchoConfigurator::getConfigFile() {
     }
     catch (const std::logic_error& err) {
         return {};
+    }
+}
+
+void EchoConfigurator::parseArguments(int argc, char **argv) {
+    Configurator::parseArguments(argc, argv);
+
+    serverPort_ = getPort("-s");
+    clientPort_ = getPort("-c");
+    configFile_ = getConfigFile();
+    try {
+        serverAddress_ = argumentParser_->get<Tins::IPv4Address>("-a");
+    }
+    catch (const std::logic_error &err) {
+        serverAddress_ = {};
+    }
+
+    if (configFile_ != "") {
+        libconfig::Config cfg;
+        try {
+            cfg.readFile(configFile_);
+        }
+        catch (const libconfig::FileIOException&) {
+            std::cerr << "Error: I/O error while reading file." << std::endl;
+            exit(-21);
+        }
+        catch (const libconfig::ParseException& err) {
+            std::cerr << "Error: Parse error at " << err.getFile() << ":" << err.getLine()
+                      << " - " << err.getError() << std::endl;
+            exit(-22);
+        }
+
+        unsigned int server_port = 0, client_port = 0;
+        std::string address;
+        if (cfg.lookupValue("server_port", server_port))
+            serverPort_ = (uint16_t)server_port;
+        if (cfg.lookupValue("client_port", client_port))
+            clientPort_ = (uint16_t)client_port;
+        if (cfg.lookupValue("server_address", address))
+            serverAddress_ = Tins::IPv4Address(address);
+    }
+
+    if (!serverPort_ && configFile_ == "") {
+        std::cerr << "Error: You must specify a server port or config filename" << std::endl;
+        exit(-20);
     }
 }
 
