@@ -18,6 +18,17 @@ void Configurator::parseArguments(int argc, char **argv) {
         std::cerr << *argumentParser_ << std::endl;
         exit(-1);
     }
+    catch (const std::logic_error& err) {
+        std::string error = err.what();
+        if (error == "stoi")
+            error = "Incorrect parameter was input";
+        else
+            error = std::regex_replace(error, std::regex {"^[\\s:]+"}, "");
+
+        std::cerr << "Error: " << error << std::endl;
+        std::cerr << argumentParser_->help().str() << std::endl;
+        exit(-2);
+    }
 }
 
 std::unique_ptr<Tins::SnifferConfiguration> Configurator::getSnifferConfig() noexcept {
