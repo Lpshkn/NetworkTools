@@ -96,7 +96,7 @@ void EchoConfigurator::parseArguments(int argc, char **argv) {
         serverAddress_ = argumentParser_->get<Tins::IPv4Address>("-a");
     }
     catch (const std::logic_error &err) {
-        serverAddress_ = {};
+        serverAddress_ = Tins::IPv4Address("127.0.0.1");
     }
 
     if (configFile_ != "") {
