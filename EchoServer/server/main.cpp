@@ -1,4 +1,5 @@
 #include "echo_configurator.h"
+#include "Server.h"
 
 int main(int argc, char* argv[]) {
     auto programName = "EchoClient";
@@ -7,7 +8,10 @@ int main(int argc, char* argv[]) {
     auto version = "0.1.0";
 
     EchoConfigurator configurator(programName, description, epilog, version);
+    configurator.parseArguments(argc, argv);
 
+    Server server(configurator);
+    server.sniff();
 
     return 0;
 }
