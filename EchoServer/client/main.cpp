@@ -12,11 +12,24 @@ int main(int argc, char* argv[]) {
 
     Client client(configurator);
 
-    std::string message, response;
-    std::cout << "Enter your message: ";
-    std::cin >> message;
-    response = client.sendMessage(message);
-    std::cout << "Response of the server: " << response;
+    std::cout << "If you want to exit, just input: \"exit\"" << std::endl << std::endl;
 
+    while(true) {
+        std::string message, response;
+        std::cout << "Enter your message: ";
+        std::cin >> message;
+
+        if (message == "exit")
+            break;
+
+        try {
+            response = client.sendMessage(message);
+            std::cout << "Response of the server: " << response << std::endl << std::endl;
+        }
+        catch (const std::logic_error &err) {
+            std::cerr << err.what() << std::endl;
+            exit(-100);
+        }
+    }
     return 0;
 }
