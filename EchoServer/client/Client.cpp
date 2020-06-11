@@ -19,14 +19,28 @@ Client::Client(EchoConfigurator &configurator) {
 }
 
 std::string Client::sendMessage(const std::string& message) {
-    Tins::PacketSender sender;
-    auto packet = Tins::EthernetII() / Tins::IP(serverAddress_) / Tins::UDP(serverPort_, clientPort_) / Tins::RawPDU(message);
-    std::unique_ptr<Tins::PDU> response(sender.send_recv(packet));
+    Tins::NetworkInterface interface(serverAddress_);
+    Tins::PacketSender sender(interface, 10, 10);
+    auto packet = Tins::IP(serverAddress_) / Tins::UDP(serverPort_, clientPort_) / Tins::RawPDU(message);
 
-    if (response)
-        auto it = response->rfind_pdu<Tins::RawPDU>().payload();
+    try {
+        // This is a mock to check that the user has permission
+        Tins::IP ip;
+        sender.send(ip);
+    }
+    catch (const Tins::socket_open_error& err) {
+        std::cerr << "Error: You haven't permission for that operation, run as the administrator" << std::endl;
+        exit(-50);
+    }
+    std::unique_ptr<Tins::PDU> response(sender.send_recv(packet, interface));
+
+    if (response) {
+        auto payload = response->rfind_pdu<Tins::RawPDU>().payload();
+        std::string data(payload.begin(), payload.end());
+        return data;
+    }
     else
-        return "";
+        throw std::logic_error("Error: Failed to connect to the server");
 }
 
 std::string Client::getInfo() {
