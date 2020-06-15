@@ -7,5 +7,10 @@ int main(int argc, char* argv[]) {
     auto epilog = "Lpshkn, 2020";
     auto version = "0.1.0";
 
+    ChatConfigurator configurator(programName, description, epilog, version);
+    configurator.parseArguments(argc, argv);
+
+    Server server(configurator);
+    server.sniff();
     return 0;
 }
