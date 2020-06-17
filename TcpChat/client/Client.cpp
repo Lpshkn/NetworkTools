@@ -1,10 +1,11 @@
 #include <sstream>
 #include "Client.h"
 
-Client::Client(ChatConfigurator &configurator) {
+Client::Client(ChatConfigurator &configurator, const std::string& nickname) {
     clientPort_ = configurator.getClientPort();
     serverPort_ = configurator.getServerPort();
     serverAddress_ = configurator.getServerAddress();
+    nickname_ = nickname;
 
     if (!clientPort_) {
         std::cerr << "Error: Incorrect client port" << std::endl;
@@ -45,12 +46,13 @@ void Client::connect() {
         throw std::logic_error("Error: Failed to connect to the server");
 }
 
-void Client::sendMessage(const std::string& message) {
+void Client::sendMessage(std::string& message) {
     Tins::NetworkInterface interface(serverAddress_);
     Tins::PacketSender sender(interface);
     Tins::TCP tcp(serverPort_, clientPort_);
     tcp.seq(seq_);
 
+    message = nickname_ + ": " + message;
     auto packet = Tins::EthernetII() / Tins::IP(serverAddress_) / tcp / Tins::RawPDU(message);
 
     sender.send(packet);
