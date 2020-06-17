@@ -1,3 +1,4 @@
+#include <thread>
 #include "chat_configurator.h"
 #include "Client.h"
 
@@ -21,6 +22,8 @@ int main(int argc, char* argv[]) {
     std::cout << "If you want to exit, just input: \"exit\"" << std::endl << std::endl;
     std::cout << "Now you are in the chat: " << std::endl;
 
+    std::thread thread(&Client::sniff, &client);
+
     while(true) {
         std::string message;
         std::cin >> message;
@@ -37,5 +40,6 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    thread.join();
     return 0;
 }

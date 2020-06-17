@@ -10,6 +10,7 @@ public:
 
     void sendMessage(std::string&);
     std::string getInfo();
+    void sniff() const;
 
 private:
     void connect();

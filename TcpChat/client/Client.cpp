@@ -68,3 +68,28 @@ std::string Client::getInfo() {
 
     return info.str();
 }
+
+void Client::sniff() const {
+    Tins::NetworkInterface interface(Tins::IPv4Address("127.0.0.1"));
+    Tins::SnifferConfiguration configuration;
+    configuration.set_filter("tcp and dst port " + std::to_string(clientPort_));
+    try {
+        Tins::Sniffer sniffer(interface.name(), configuration);
+
+        for (auto &packet : sniffer) {
+            auto raw = packet.pdu()->find_pdu<Tins::RawPDU>();
+            if (raw) {
+                std::string data(raw->payload().begin(), raw->payload().end());
+                std::cout << data << std::endl;
+            }
+        }
+    }
+    catch (const Tins::pcap_error& err) {
+        std::cerr << "Error: You haven't permission for that operation, run as the administrator" << std::endl;
+        exit(-49);
+    }
+    catch (const Tins::socket_open_error& err) {
+        std::cerr << "Error: You haven't permission for that operation, run as the administrator" << std::endl;
+        exit(-50);
+    }
+}
