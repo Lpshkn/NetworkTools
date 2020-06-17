@@ -4,6 +4,7 @@
 Server::Server(ChatConfigurator &configurator) {
     serverPort_ = configurator.getServerPort();
     serverAddress_ = configurator.getServerAddress();
+    clients_ = {};
 
     if (!serverPort_) {
         std::cerr << "Error: Incorrect server port" << std::endl;
@@ -13,15 +14,30 @@ Server::Server(ChatConfigurator &configurator) {
     std::cout << getInfo();
 }
 
-void processClientData(Tins::TCPIP::Stream& stream) {
+void processClientData(Tins::TCPIP::Stream& stream,  Server* server) {
     auto payload = stream.client_payload();
     std::string data(payload.begin(), payload.end());
-    std::cout << "CLIENT" << " " << data << std::endl;
+    std::cout << data << std::endl;
+
+    Tins::NetworkInterface interface(Tins::IPv4Address(server->serverAddress_));
+    Tins::PacketSender sender(interface);
+
+    for (auto &client : server->clients_) {
+        if (client.first != stream.client_addr_v4() || client.second != stream.client_port()) {
+            auto packet = Tins::EthernetII() /
+                    Tins::IP(client.first, server->serverAddress_) /
+                    Tins::TCP(client.second, server->serverPort_) /
+                    Tins::RawPDU(data);
+
+            sender.send(packet);
+        }
+    }
 }
 
 
 void processNewConnection(Tins::TCPIP::Stream& stream, Server* server) {
-    stream.client_data_callback(&processClientData);
+    auto func = std::bind(processClientData, std::placeholders::_1, server);
+    stream.client_data_callback(func);
 
     Tins::NetworkInterface interface(Tins::IPv4Address(server->serverAddress_));
     Tins::PacketSender sender(interface);
@@ -33,6 +49,8 @@ void processNewConnection(Tins::TCPIP::Stream& stream, Server* server) {
     sender.send(packet);
 
     stream.auto_cleanup_payloads(true);
+
+    server->clients_.emplace_back(stream.client_addr_v4(), stream.client_port());
 }
 
 void Server::sniff() {

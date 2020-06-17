@@ -14,9 +14,9 @@ public:
 
 private:
     friend void processNewConnection(Tins::TCPIP::Stream& stream, Server* server);
-    friend void processClientData(Tins::TCPIP::Stream& stream);
+    friend void processClientData(Tins::TCPIP::Stream& stream, Server* server);
 
-
+    std::vector<std::pair<Tins::IPv4Address, uint16_t>> clients_;
     Tins::IPv4Address serverAddress_;
     uint16_t serverPort_;
 };
