@@ -7,4 +7,3 @@ There are follow tasks that will be implemented in this project:
 * Program for switching subnets
 * Echo-server
 * TCP chat
-* Program for monitoring and modifying network traffic
