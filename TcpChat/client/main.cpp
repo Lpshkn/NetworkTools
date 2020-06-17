@@ -10,14 +10,16 @@ int main(int argc, char* argv[]) {
     ChatConfigurator configurator(programName, description, epilog, version);
     configurator.parseArguments(argc, argv);
 
-    Client client(configurator);
-
-    std::cout << "If you want to exit, just input: \"exit\"" << std::endl << std::endl;
-
     std::string nickname;
     std::cout << "Enter your nickname: ";
     std::cin >> nickname;
     std::cout << std::endl;
+
+    Client client(configurator, nickname);
+
+    std::cout << "You connected to the server" << std::endl;
+    std::cout << "If you want to exit, just input: \"exit\"" << std::endl << std::endl;
+    std::cout << "Now you are in the chat: " << std::endl;
 
     while(true) {
         std::string message;
