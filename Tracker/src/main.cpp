@@ -10,5 +10,11 @@ int main(int argc, char* argv[]) {
     TrackerConfigurator configurator(programName, description, epilog, version);
     configurator.parseArguments(argc, argv);
 
+    int maxLength = 0;
+    std::string modifiedPcapFile, forbiddenPcapFile;
+    std::cout << "Enter the max length of data: "; std::cin >> maxLength;
+    std::cout << "Enter the filename of the PCAP file for modified packets: "; std::cin >> modifiedPcapFile;
+    std::cout << "Enter the filename of the PCAP file for forbidden packets: "; std::cin >> forbiddenPcapFile;
+
     return 0;
 }
