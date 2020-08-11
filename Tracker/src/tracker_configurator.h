@@ -18,6 +18,9 @@ public:
     [[nodiscard]] Tins::IPv4Address getWrongServerAddress() const;
     [[nodiscard]] Tins::IPv4Address getClientAddress() const;
     [[nodiscard]] bool getThroughput() const;
+    [[nodiscard]] int getMaxLengthPacket() const;
+    [[nodiscard]] std::filesystem::path getModifiedPcapFile() const;
+    [[nodiscard]] std::filesystem::path getForbiddenPcapFile() const;
     void parseArguments(int argc, char* argv[]) override;
 
 private:
@@ -33,6 +36,10 @@ private:
     Tins::IPv4Address wrongServerAddress_;
     Tins::IPv4Address clientAddress_;
     bool throughput_;
+    int maxLengthPacket_;
+    std::filesystem::path modifiedPcapFile_;
+    std::filesystem::path forbiddenPcapFile_;
+
 
     std::filesystem::path configFile_;
 };

@@ -1,4 +1,5 @@
 #include <fstream>
+#include <filesystem>
 #include "tracker_configurator.h"
 
 TrackerConfigurator::TrackerConfigurator(const std::string &program_name, const std::string &description,
@@ -115,6 +116,17 @@ void TrackerConfigurator::parseArguments(int argc, char **argv) {
         std::cerr << "Error: You must specify a configuration file" << std::endl;
         exit(-20);
     }
+
+    std::cout << "Enter the max length of data: "; std::cin >> maxLengthPacket_;
+    if (std::cin.fail() || maxLengthPacket_ <= 0)
+    {
+        std::cin.clear();
+        std::cin.ignore(32767, '\n');
+        maxLengthPacket_ = 1000;
+        std::cout << "Warning: The incorrect length of the packet was entered. 1000 was setup." << std::endl;
+    }
+    std::cout << "Enter the filename of the PCAP file for modified packets: "; std::cin >> modifiedPcapFile_;
+    std::cout << "Enter the filename of the PCAP file for forbidden packets: "; std::cin >> forbiddenPcapFile_;
 }
 
 uint16_t TrackerConfigurator::getTrueServerPort() const {
@@ -143,4 +155,16 @@ uint16_t TrackerConfigurator::getClientPort() const {
 
 bool TrackerConfigurator::getThroughput() const {
     return throughput_;
+}
+
+int TrackerConfigurator::getMaxLengthPacket() const {
+    return maxLengthPacket_;
+}
+
+std::filesystem::path TrackerConfigurator::getModifiedPcapFile() const {
+    return modifiedPcapFile_;
+}
+
+std::filesystem::path TrackerConfigurator::getForbiddenPcapFile() const {
+    return forbiddenPcapFile_;
 }
